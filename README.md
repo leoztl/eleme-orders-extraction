@@ -3,9 +3,9 @@
 This webclawer will log into the user account and write the order information within three months into a csv file.<br>
 It is designed to help my classmates Jingyi's econ experiment. 
 ## Environment
-* Compiling environment for Python 3
+* Compiling environment for **Python 3**
 * Python libraries: **selenium, requests, re, unicodecsv**. <br> You can install them with pip easilly. 
-* Chromedriver matches your chrome browser's version. <br>[downloading address for chromedriver](http://chromedriver.storage.googleapis.com/index.html). You can also go to the [official website](https://sites.google.com/a/chromium.org/chromedriver/downloads)<br> Detailed instruction for downloading and installation can be found online. Theoretically, other drivers and browsers are also okay as long as they are matched. But I haven't test them yet. 
+* **Chromedriver** matches your chrome browser's version. <br>[downloading address for chromedriver](http://chromedriver.storage.googleapis.com/index.html). You can also go to the [official website](https://sites.google.com/a/chromium.org/chromedriver/downloads)<br> Detailed instruction for downloading and installation can be found online. Theoretically, other drivers and browsers are also okay as long as they are matched. But I haven't test them yet. 
 ## A brief manual
 Currentlty, this program is able to extract orders within three months as the experiment requires. Detailed information includes the item names, restaurant name, total cost, original price(total), date & time, and order number. The program will first log into the uesr account, which requires user's phone number and the verification code sent to the phone while logging in. The login process is done by the selenium. Then the driver extract the cookie and transfer it into the form which can be used in requests library. With the cookies the requests will handle the rest of work. The infromation extracted will be stored as a csv file. Since we expect to check them by Excel afterwards, the data is encoded by gbk. <br>
 After setting the environment, you can run this py file and follow the instructions in the command line. 
