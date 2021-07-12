@@ -1,6 +1,6 @@
 # eleme-user-s-orders-extraction
 *eleme_order_info.py* is a python program to extract user's order information on eleme, a popular food delivery platform in China. <br>
-This webclawer will log into the user account and write the order information within three months into a csv file.<br>
+This webclawer will log into the user account and write the order information within three months and a week into a csv file.<br>
 It is designed to help my classmates Jingyi's econ experiment. 
 ## Environment
 * Compiling environment for **Python 3**
