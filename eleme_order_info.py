@@ -1,6 +1,6 @@
 '''
 Created by: Tianle Zhu
-LastEditTime: 2021-06-21
+LastEditTime: 2021-07-12
 '''
 from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
@@ -12,7 +12,39 @@ from time import sleep
 import requests
 import re
 import unicodecsv as ucsv
+import time as t
 
+def timecal():
+    # calculate and return the earliest order timestamp
+    month = {1:31,2:28,3:31,4:30,5:31,6:30,7:31,8:31,9:30,10:31,11:30,12:31}
+    current = t.strftime('%Y-%m-%d',t.localtime())
+    y,m,d = current.split("-")
+    y = int(y)
+    m = int(m)
+    d = int(d)
+    # minus 7 days
+    if d > 7:
+        d -= 7
+    else:
+        if m > 1:
+            m -= 1
+            d = month(m)-(7-d)
+        else:
+            y -= 1
+            m = 12
+            d = month(m)-(7-d)
+    #minus 3 months
+    if m > 3:
+        m -= 3
+    else:
+        y -=1
+        m = 12 - (3-m)
+    
+    ret = str(y)+"-" + str(m) + "-" + str(d)
+    return t.mktime(t.strptime(ret,'%Y-%m-%d'))
+
+standardstamp = timecal()
+#--------------extraction part----------------------------------
 options = webdriver.ChromeOptions()
 #options.add_experimental_option('mobileEmulation',mobileEmulation)
 options.add_experimental_option("excludeSwitches", ['enable-automation', 'enable-logging'])
@@ -93,4 +125,41 @@ for order in orders:
     data = [itemstring[:-1],name,cost,originalPrice,time,orderid+"\t"]
     w.writerow(data)
     
+timestampPattern = '"from_time":.*?,"orders"'
 
+timestamp = ""
+timelimit = False
+
+while True:
+    url = "https://h5.ele.me/restapi/bos/v2/users/"+str(userID)+"/old_orders?limit=8&from_time=" + timestamp
+    source = requests.get(url = url, cookies = cookies).text
+    sleep(0.5)
+    timestamp = re.findall(timestampPattern, source)[0][12:-9]
+    orders = re.findall(orderPattern,source)
+    for order in orders:
+        ingredient = re.findall(itemPattern,order)
+        item = [i[29:-1] for i in ingredient]
+        name = re.findall(restaurant_namePattern,order)[0][18:-1]
+        time = re.findall(timePattern,order)[0][23:-18]
+        cost = re.findall(costPattern,order)[0][15:-17]
+        orderid = re.findall(idPattern,order)[0][12:-13]
+        result1 = re.findall(pricePattern1,order)
+        originalPrice = 0
+        date = time[0:-6]
+        currentstamp =  t.mktime(t.strptime(date,'%Y-%m-%d'))
+        if currentstamp < standardstamp:
+            timelimit = True
+            break
+        for i in result1:
+            result2 = re.findall(pricePattern2,i)[0][8:-11]
+            originalPrice += float(result2)
+        itemstring = ""
+        for i in item:
+            itemstring += i + "+"
+        itemstring = itemstring.replace("➕","+")
+        data = [itemstring[:-1],name,cost,originalPrice,time,orderid+"\t"]
+        w.writerow(data)
+    if timelimit:
+        break
+    if len(orders) == 0:
+        break
