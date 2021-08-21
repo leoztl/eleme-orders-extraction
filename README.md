@@ -13,6 +13,6 @@ A few points to watch out:<br>
 * Change the variable `filename` in line 49 to the real path in your computer where you want store the csv file
 * One of the flaws in this program right now is that in the login process, the driver can not locate the login buttom on the page after sending the verification code even though     it initially can. So, remeber to manually click that buttom and wait for the page to load before proceeding to the next step. 
 * Make sure that you open the final csv file with gbk encoding format. 
-* In convenience of future data analysis, all the information extracted from differnet uesrs will be stored in the same *record.csv*. Therefore, the program will not write the headers. It is recommended that you prepare the csv file yourself in advance. 
+* In convenience of future data analysis, all the information extracted from differnet uesrs will be stored in the same *record.csv*. Therefore, writing headers is not included in the program. It is recommended that you prepare the csv file yourself in advance. 
 ## Other
 Initially, we plan to get over the login process by disguising as a mobile device since at that time eleme do not have a login page for PC. We also used selenium to deal with the block-sliding process. However, it did not save us much time and was not very stable. It would fail to pass the detection after 3-4 times of trials. Even though we do not use it anymore, it is still uploaded in the *blocking_sliding.py*. 
